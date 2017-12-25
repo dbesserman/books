@@ -19,7 +19,7 @@ defmodule Storex.Store.Book do
     book
     |> cast(attrs, [:title, :description, :price, :image_url])
     |> validate_required([:title, :description, :price, :image_url])
-    |> validate_max_price()
+    # |> validate_max_price()
   end
 
   def validate_max_price(changeset) do
