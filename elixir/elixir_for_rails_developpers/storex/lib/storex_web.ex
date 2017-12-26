@@ -40,6 +40,7 @@ defmodule StorexWeb do
       import StorexWeb.Router.Helpers
       import StorexWeb.ErrorHelpers
       import StorexWeb.Gettext
+      import StorexWeb.Helpers.PriceFormatter
     end
   end
 
