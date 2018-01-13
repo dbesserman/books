@@ -1,8 +1,8 @@
 defmodule Storex.SalesTest do
   use Storex.DataCase
-  alias Storex.{Sales, Store}
+  alias Storex.{Sales, Store, Accounts}
 
-  def book_fixtures(attrs \\ %{}) do
+  def book_fixture(attrs \\ %{}) do
     default_attrs = %{
       title: "Title1",
       description: "Description1",
@@ -23,6 +23,21 @@ defmodule Storex.SalesTest do
     cart
   end
 
+  def user_fixture(attrs \\ %{}) do
+    default_attrs = %{
+      full_name: "John Doe",
+      email: "john.doe@test.tld",
+      password: "123456"
+    }
+
+    {:ok, user} = 
+      attrs
+      |> Enum.into(default_attrs)
+      |> Accounts.create_user()
+
+    user
+  end
+
   describe "carts" do
     alias Storex.Sales.Cart
 
@@ -36,7 +51,7 @@ defmodule Storex.SalesTest do
     end
 
     test "add_book_to_cart/2 creates or increments a line_item" do
-      book = book_fixtures()
+      book = book_fixture()
       cart = cart_fixture()
 
       {:ok, line_item1} = Sales.add_book_to_cart(book, cart)
@@ -51,7 +66,7 @@ defmodule Storex.SalesTest do
 
     test "remove_book_from_cart/2 decrements or deletes a line_item" do
       cart = cart_fixture()
-      book = book_fixtures()
+      book = book_fixture()
 
       Sales.add_book_to_cart(book, cart)
       Sales.add_book_to_cart(book, cart)
@@ -67,8 +82,8 @@ defmodule Storex.SalesTest do
     end
 
     test "list_line_items/1 list items that belongs to a cart" do
-      book1 = book_fixtures()
-      book2 = book_fixtures()
+      book1 = book_fixture()
+      book2 = book_fixture()
       cart1 = cart_fixture()
       cart2 = cart_fixture()
 
@@ -83,8 +98,8 @@ defmodule Storex.SalesTest do
     end
 
     test "line_items_quantity_count/1 returns the total quantity of items" do
-      book1 = book_fixtures()
-      book2 = book_fixtures()
+      book1 = book_fixture()
+      book2 = book_fixture()
       cart  = cart_fixture()
 
       Sales.add_book_to_cart(book1, cart)
@@ -96,8 +111,8 @@ defmodule Storex.SalesTest do
     end
 
     test "line_items_total_price/1 returns the total price of items" do
-      book1 = book_fixtures(%{price: "10.00"})
-      book2 = book_fixtures(%{price: "15.00"})
+      book1 = book_fixture(%{price: "10.00"})
+      book2 = book_fixture(%{price: "15.00"})
       cart  = cart_fixture()
 
       Sales.add_book_to_cart(book1, cart)
@@ -107,6 +122,30 @@ defmodule Storex.SalesTest do
       line_items = Sales.list_line_items(cart)
 
       assert Sales.line_items_total_price(line_items) == Decimal.new("35.00")
+    end
+  end
+
+  describe "orders" do
+    test "new_order/0 returns an empty changeset" do
+      assert %Ecto.Changeset{} = Sales.new_order()
+    end
+
+    test "process_order/3 creates an order" do
+      user = user_fixture()
+      cart = cart_fixture()
+      book = book_fixture()
+
+      Sales.add_book_to_cart(book, cart)
+      Sales.add_book_to_cart(book, cart)
+
+      {:ok, order} = Sales.process_order(user, cart, %{address: "Test Street, 25"})
+      [line_item]   = order.line_items
+
+      assert order.user_id      == user.id
+      assert order.address      == "Test Street, 25"
+      assert line_item.order_id == order.id
+      assert line_item.book_id  == book.id
+      assert line_item.quantity == 2
     end
   end
 end
