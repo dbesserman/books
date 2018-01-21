@@ -1,0 +1,20 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <div class="form-group">
+    <div class="form-field">
+      <%= label f, :receipient_name %>
+      <%= error_tag f, :receipient_name %>
+      <%= text_input f, :receipient_name %>
+    </div>
+    <div class="form-field">
+      <%= label f, :address %>
+      <%= error_tag f, :address %>
+      <%= text_input f, :address %>
+    </div>
+    <div class="form-field">
+      <%= label f, :status %>
+      <%= error_tag f, :status %>
+      <%= select f, :status, statuses() %>
+    </div>
+    <%= submit @label, class: "button button-primary" %>
+  </div>
+<% end %>

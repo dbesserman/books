@@ -1,0 +1,12 @@
+<ul>
+  <%= for user <- @users do %>
+    <li>
+      Email: <%= user.email %>
+      Name: <%= user.full_name %>
+      Admin: <%= user.is_admin %>
+      <%= if @current_user.is_admin && !user.is_admin do %>
+        <%= link "Make admin", to: user_admin_path(@conn, :create, user), method: :post, class: "button button-danger" %> 
+      <% end %>
+    </li>
+  <% end %>
+</ul>

@@ -17,7 +17,7 @@ defmodule Storex.Store.Book do
   def changeset(%Book{} = book, attrs) do
     # transforms external parameters into an Ecto changeset
     book
-    |> cast(attrs, [:title, :description, :price, :image_url])
+    |> cast(attrs, [:id, :title, :description, :price, :image_url])
     |> validate_required([:title, :description, :price, :image_url])
     # |> validate_max_price()
   end

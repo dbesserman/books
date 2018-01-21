@@ -3,7 +3,15 @@ defmodule StorexWeb.UserController do
   alias Storex.Accounts
   alias StorexWeb.Plugs.CurrentUser
 
-  def new(conn, params) do
+  plug StorexWeb.Plugs.AdminOnly when action in [:index]
+
+  def index(conn, _params) do
+    users = Accounts.list_users() 
+
+    render(conn, "index.html", users: users)
+  end
+
+  def new(conn, _params) do
     changeset = Accounts.new_user()
     render(conn, "new.html", changeset: changeset)
   end

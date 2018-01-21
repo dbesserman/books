@@ -1,0 +1,16 @@
+<ul>
+  <%= for order <- @orders do %>
+    <li>
+      Order:
+      <%= order.id %>
+      Recipient:
+      <%= order.receipient_name %>
+      Address:
+      <%= order.address %>
+      Status:
+      <%= order.status %>
+      <%= link "Edit", to: order_path(@conn, :edit, order), class: "button" %>
+      </dl>
+    </li>
+  <% end %>
+</ul>

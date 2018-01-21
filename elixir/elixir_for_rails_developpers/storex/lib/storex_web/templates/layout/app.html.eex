@@ -20,6 +20,11 @@
           <li><%= link "sign up", to: user_path(@conn, :new) %></li>
           <li><%= link "sign in", to: session_path(@conn, :new) %></li>
         <% end %>
+        <%= if @is_admin do %>
+          <li><%= link "New Book", to: book_path(@conn, :new) %></li>
+          <li><%= link "Orders", to: order_path(@conn, :index) %></li>
+          <li><%= link "Users", to: user_path(@conn, :index) %></li>
+        <% end %>
 
         <%= if items_count(@conn) do %>
           <li>

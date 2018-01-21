@@ -10,6 +10,7 @@ defmodule Storex.Sales.Order do
 
     field :address, :string
     field :receipient_name, :string
+    field :status, :string
 
     timestamps()
   end
@@ -17,7 +18,11 @@ defmodule Storex.Sales.Order do
   @doc false
   def changeset(%Order{} = order, attrs) do
     order
-    |> cast(attrs, [:address, :receipient_name])
+    |> cast(attrs, [:address, :receipient_name, :status])
     |> validate_required([:address])
+  end
+
+  def statuses do
+    ["open", "dispatched", "canceled"]
   end
 end

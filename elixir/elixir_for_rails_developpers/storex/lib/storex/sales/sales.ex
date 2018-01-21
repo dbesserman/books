@@ -59,8 +59,30 @@ defmodule Storex.Sales do
     end)
   end
 
+  def list_orders() do
+    Repo.all(Order)
+  end
+
+  def get_order(id) do
+    Repo.get(Order, id)
+  end
+
+  def change_order(order \\ %Order{}) do
+    Order.changeset(order, %{})
+  end
+
+  def update_order(order, attrs) do
+    order
+    |> Order.changeset(attrs)
+    |> Repo.update
+  end
+
   def new_order() do
     Order.changeset(%Order{}, %{})
+  end
+
+  def order_statuses() do
+    Order.statuses
   end
 
   def process_order(user, cart, attrs) do

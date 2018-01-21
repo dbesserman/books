@@ -18,14 +18,19 @@ defmodule StorexWeb.Router do
   end
 
   scope "/", StorexWeb do
-    pipe_through :browser # Use the default browser stack
+    pipe_through :browser
 
     get "/", BookController, :index
-    get "/books/:id", BookController, :show
+
+    resources "/books", BookController
     resources "/carts", CartController, singleton: true, only: [:show, :create, :delete]
-    resources "/users", UserController, only: [:new, :create]
     resources "/sessions", SessionController, only: [:new, :create, :delete], singleton: true
     resources "/checkout", CheckoutController, only: [:new, :create]
+    resources "/orders", OrderController, only: [:index, :edit, :update]
+
+    resources "/users", UserController, only: [:new, :create, :index] do
+      resources "/admin", AdminController, only: [:create]
+    end
   end
 
   # Other scopes may use custom stacks.

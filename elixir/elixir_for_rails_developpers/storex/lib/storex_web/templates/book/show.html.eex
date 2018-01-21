@@ -1,4 +1,3 @@
-
 <h1><%= @book.title %></h1>
 
 <div class="book book-hero">
@@ -15,3 +14,8 @@
 </div>
 
 <%= link "Add to cart", to: cart_path(@conn, :create, book_id: @book.id), method: :create, class: "button button-primary" %>
+
+<%= if @is_admin do %>
+  <%= link "Edit", to: book_path(@conn, :edit, @book), class: "button" %>
+  <%= link "Delete", to: book_path(@conn, :delete, @book), method: :delete, data: [confirm: "Are you sure?"], class: "button button-danger" %>
+<% end %>
